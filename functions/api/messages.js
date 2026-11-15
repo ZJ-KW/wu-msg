@@ -8,6 +8,12 @@ export async function onRequestGet(context) {
      FROM messages m JOIN users u ON u.id=m.user_id
      ORDER BY m.id DESC LIMIT 100`
   ).all();
+
+  // ===== 新增：查询总数 =====
+  const userCount = await env.DB.prepare('SELECT COUNT(*) as cnt FROM users').first();
+  const msgCount = await env.DB.prepare('SELECT COUNT(*) as cnt FROM messages').first();
+  // ===== 新增结束 =====
+
   return json({
     loggedIn: !!me,
     username: me ? me.username : '',
@@ -17,7 +23,9 @@ export async function onRequestGet(context) {
       created_at: r.created_at,
       username: r.username,
       mine: me ? r.user_id === me.user_id : false
-    }))
+    })),
+    userCount: userCount ? userCount.cnt : 0,
+    messageCount: msgCount ? msgCount.cnt : 0
   });
 }
 

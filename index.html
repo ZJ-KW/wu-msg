@@ -2,55 +2,99 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>留言板</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;color:#333;padding:20px 0}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Helvetica Neue","Noto Sans CJK SC",sans-serif;background:#16213E;color:#FFF;padding:20px 0;-webkit-user-select:none;user-select:none;min-height:100vh;position:relative}
+body::before{content:"";position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1A1A2E 0%,#16213E 50%,#0F3460 100%);z-index:-1;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .container{max-width:700px;margin:0 auto;padding:0 16px}
-.header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:20px 30px;border-radius:16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;box-shadow:0 8px 24px rgba(102,126,234,.3)}
-.header h2{font-size:22px}
-.header a{color:#fff;text-decoration:none;background:rgba(255,255,255,.2);padding:6px 16px;border-radius:20px;font-size:14px}
-.auth-box{background:#fff;padding:40px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.12);max-width:400px;margin:40px auto}
-.auth-box h2{text-align:center;margin-bottom:24px}
-.form-group{margin-bottom:18px}
-.form-group label{display:block;margin-bottom:6px;color:#555;font-size:14px}
-/* 修改处 1：font-size 15px -> 16px */
-.form-group input{width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:8px;font-size:16px}
-.form-group input:focus{outline:none;border-color:#667eea}
-.btn{width:100%;padding:12px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
-.link{text-align:center;margin-top:16px;font-size:14px}
-.link a{color:#667eea}
-.alert{padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:14px}
-.alert.error{background:#f8d7da;color:#721c24}
-.alert.success{background:#d4edda;color:#155724}
-.post-box{background:#fff;padding:24px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:24px}
-/* 修改处 2：font-size 15px -> 16px */
-.post-box textarea{width:100%;min-height:300px;padding:14px;border:2px solid #e8e8e8;border-radius:10px;font-size:16px;resize:vertical;font-family:inherit}
-.post-box button{margin-top:12px;float:right;padding:10px 28px;border:none;border-radius:8px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:16px;cursor:pointer}
+
+/* ===== 顶部栏 ===== */
+.header{background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#fff;padding:16px 24px;border-radius:16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;box-shadow:0 8px 32px rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1)}
+.header h2{font-size:20px;font-weight:700}
+.header span{font-size:14px;color:rgba(255,255,255,0.7)}
+.header a{color:#fff;text-decoration:none;background:rgba(255,82,82,0.2);padding:6px 16px;border-radius:20px;font-size:14px;border:1px solid rgba(255,82,82,0.3);transition:background 0.3s}
+.header a:hover{background:rgba(255,82,82,0.4)}
+
+/* ===== 认证框（登录/注册） ===== */
+.auth-box{background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:40px 30px;border-radius:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);max-width:400px;margin:40px auto}
+.auth-box h2{text-align:center;margin-bottom:30px;font-size:24px;font-weight:700;color:#FFF}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;margin-bottom:8px;color:rgba(255,255,255,0.7);font-size:14px}
+.form-group input{width:100%;padding:14px 16px;border:1px solid rgba(255,255,255,0.2);border-radius:12px;font-size:16px;background:rgba(255,255,255,0.1);color:#FFF;transition:border-color 0.3s;font-family:inherit}
+.form-group input::placeholder{color:rgba(255,255,255,0.3)}
+.form-group input:focus{outline:none;border-color:#4FC3F7}
+
+/* ===== 按钮 ===== */
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#4FC3F7,#0288D1);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:opacity 0.3s,transform 0.2s;font-family:inherit}
+.btn:hover{opacity:0.9}
+.btn:active{transform:scale(0.98)}
+
+/* ===== 链接 ===== */
+.link{text-align:center;margin-top:24px;font-size:14px;color:rgba(255,255,255,0.5)}
+.link a{color:#4FC3F7;text-decoration:none;font-weight:500}
+.link a:hover{text-decoration:underline}
+
+/* ===== 提示框 ===== */
+.alert{padding:12px 16px;border-radius:10px;margin-bottom:20px;text-align:center;font-size:14px;border:1px solid transparent}
+.alert.error{background:rgba(255,82,82,0.15);color:#FF5252;border-color:rgba(255,82,82,0.3)}
+.alert.success{background:rgba(102,187,106,0.15);color:#66BB6A;border-color:rgba(102,187,106,0.3)}
+
+/* ===== 发布框 ===== */
+.post-box{background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:24px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1);margin-bottom:24px}
+.post-box textarea{width:100%;min-height:300px;padding:14px;border:1px solid rgba(255,255,255,0.2);border-radius:12px;font-size:16px;resize:vertical;font-family:inherit;background:rgba(255,255,255,0.1);color:#FFF;transition:border-color 0.3s}
+.post-box textarea::placeholder{color:rgba(255,255,255,0.3)}
+.post-box textarea:focus{outline:none;border-color:#4FC3F7}
+.post-box button{margin-top:12px;float:right;padding:10px 28px;border:none;border-radius:10px;background:linear-gradient(135deg,#4FC3F7,#0288D1);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity 0.3s,transform 0.2s;font-family:inherit}
+.post-box button:hover{opacity:0.9}
+.post-box button:active{transform:scale(0.96)}
 .clear{clear:both}
-.msg-card{background:#fff;padding:20px 24px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:14px;border:2px solid transparent}
-.msg-card:hover{border-color:#a8d4ff}
+
+/* ===== 留言卡片 ===== */
+.msg-card{background:rgba(255,255,255,0.05);padding:20px 24px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1);margin-bottom:14px;border:1px solid rgba(255,255,255,0.1);transition:border-color 0.25s,background 0.25s}
+.msg-card:hover{border-color:#4FC3F7;background:rgba(79,195,247,0.05)}
+
 .msg-meta{display:flex;align-items:center;margin-bottom:10px}
-.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:12px}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4FC3F7,#0288D1);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:12px;font-size:16px}
 .msg-info{flex:1}
-.msg-info .name{font-weight:600}
-.msg-info .time{font-size:12px;color:#999;margin-top:2px}
+.msg-info .name{font-weight:600;font-size:15px;color:#FFF}
+.msg-info .time{font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px}
+
+/* ===== 操作按钮 ===== */
 .msg-actions{display:flex;gap:6px}
-.btn-action{padding:4px 10px;border:1px solid #ddd;background:#f8f9fa;border-radius:4px;font-size:12px;cursor:pointer;color:#555;text-decoration:none}
-.btn-action:hover{background:#667eea;color:#fff;border-color:#667eea}
-.btn-delete:hover{background:#dc3545;border-color:#dc3545}
-.msg-content{white-space:pre-wrap;word-break:break-word;line-height:1.6;max-height:240px;overflow:auto}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2000;align-items:center;justify-content:center}
+.btn-action{padding:5px 12px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);border-radius:6px;font-size:12px;cursor:pointer;color:rgba(255,255,255,0.8);text-decoration:none;transition:all 0.2s;font-family:inherit}
+.btn-action:hover{background:#4FC3F7;color:#FFF;border-color:#4FC3F7}
+.btn-delete:hover{background:#FF5252;border-color:#FF5252}
+
+/* ===== 留言内容 ===== */
+.msg-content{white-space:pre-wrap;word-break:break-word;line-height:1.6;font-size:15px;color:rgba(255,255,255,0.85);max-height:240px;overflow:auto;padding-right:8px}
+.msg-content::-webkit-scrollbar{width:6px}
+.msg-content::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);border-radius:3px}
+.msg-content::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:3px}
+
+/* ===== 模态框 ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center}
 .modal-overlay.active{display:flex}
-.modal-box{background:#fff;padding:32px 28px;border-radius:14px;max-width:380px;width:88%;text-align:center}
-.modal-box p{margin-bottom:24px}
+.modal-box{background:#16213E;padding:32px 28px;border-radius:14px;max-width:380px;width:88%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);animation:popIn 0.2s ease-out}
+@keyframes popIn{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-box p{margin-bottom:24px;font-size:16px;color:#FFF;line-height:1.5}
 .modal-buttons{display:flex;gap:12px;justify-content:center}
-.modal-btn{padding:9px 28px;border:none;border-radius:8px;cursor:pointer}
-.modal-btn.primary{background:#667eea;color:#fff}
-.modal-btn.cancel{background:#e8e8e8;color:#555}
-.empty{text-align:center;color:#999;padding:60px 0}
+.modal-btn{padding:10px 28px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;transition:opacity 0.2s}
+.modal-btn:hover{opacity:0.88}
+.modal-btn.primary{background:#4FC3F7;color:#1A1A2E}
+.modal-btn.cancel{background:rgba(255,255,255,0.15);color:#FFF}
+
+.empty{text-align:center;color:rgba(255,255,255,0.4);padding:60px 0}
 .hidden{display:none}
+
+@media (max-width:600px){
+  .auth-box{padding:30px 20px;margin:20px auto}
+  .auth-box h2{font-size:22px;margin-bottom:24px}
+  .header{padding:16px 20px;flex-wrap:wrap;gap:10px}
+  .header h2{font-size:18px}
+  .post-box,.msg-card{padding:16px}
+}
 </style>
 </head>
 <body>

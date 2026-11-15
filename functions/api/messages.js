@@ -29,7 +29,7 @@ export async function onRequestPost(context) {
   const body = await request.json().catch(() => ({}));
   const content = (body.content || '').trim();
   if (!content) return json({ message: '留言内容不能为空' }, 400);
-  if (content.length > 5000) return json({ message: '留言过长' }, 400);
+  if (content.length > 50000) return json({ message: '留言过长' }, 400);
 
   await env.DB.prepare('INSERT INTO messages (user_id, content, created_at) VALUES (?,?,?)')
     .bind(me.user_id, content, beijingNow()).run();

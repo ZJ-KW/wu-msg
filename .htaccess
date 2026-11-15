@@ -1,0 +1,99 @@
+
+
+#上传到infinityfree根目录
+
+
+
+
+
+
+# 1. 启用重写引擎 + 强制HTTPS访问（核心规则）
+
+# 以下3行末尾不要有空格，否则可能会报错
+
+# 开启 Apache 服务器的「URL 重写引擎」
+RewriteEngine On
+
+# 如果检测到用户正在用 HTTP 访问网站，执行后面的 RewriteRule。%{HTTPS}：Apache 内置的系统变量，如果是 HTTPS 访问，这个变量的值是 on，如果是 HTTP 访问，这个变量的值是 off
+RewriteCond %{HTTPS} off
+
+# ^(.*)$ 是正则表达式，%{HTTP_HOST}：自动获取当前访问的域名，%{REQUEST_URI}：自动获取用户请求的路径 / 参数。L：Last 的缩写，意思是“这是最后一条重写规则”，执行完这条后不再处理后续规则，避免冲突。R=301：Redirect 的缩写，301 表示「永久重定向」，告诉浏览器 / 搜索引擎“这个 URL 永久迁移到 HTTPS 版本”，对 SEO 友好
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+RewriteRule ^asdfg$         /asdfg.html         [L,R=301]
+RewriteRule ^qweasdzxc$     /qweasdzxc.html     [L,R=301]
+
+
+
+
+
+
+# 2. 启用 Gzip 压缩（mod_deflate 模块）
+
+# MIME 类型                     对应文件（后缀）            用途 / 说明                                                                                                 示例
+# text/html                     .html、.htm                 网页核心文件，包含 HTML 标记语言，是浏览器渲染页面的基础（.htm 是早期短后缀，和 .html 完全等价）            index.html、about.htm
+# text/css                      .css                        层叠样式表文件，用于控制 HTML 页面的样式（布局、颜色、字体等）                                              style.css、font.css
+# text/javascript               .js（同下）                 历史遗留的 JavaScript MIME 类型，早期浏览器使用，现在已不推荐                                               app.js、utils.js
+# application/javascript        .js                         JavaScript 的标准 / 推荐 MIME 类型，现代浏览器 / 服务器优先使用                                             同上
+# text/plain                    .txt、纯文本文件            无格式的纯文本文件，不包含任何标记 / 代码，也包括各类纯文本配置文件（如 .gitignore、README、.env 等）       README.txt、config.env、log.txt
+
+<IfModule mod_deflate.c>
+    # 对指定类型的文件开启输出压缩，减小传输体积、提升加载速度
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE text/plain
+    # 仅对 TTF/OTF 字体开启压缩（WOFF/WOFF2 已压缩，跳过）
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE font/otf
+</IfModule>
+
+
+
+
+
+
+# 3. 配置ETag生成规则
+
+# MTime Size 表示使用文件的最后修改时间和文件大小来生成一个唯一的哈希字符串。当浏览器下次请求时，会带上这个 ETag 值。服务器会对比当前文件的 ETag，如果一致，就返回 304 Not Modified，告诉浏览器缓存可用，从而节省带宽
+
+FileETag MTime Size
+
+
+
+
+
+
+# 4. 启用浏览器缓存（mod_expires 模块）
+
+# 苹果手机端设置缓存 MP3 比较复杂，以下设置苹果手机端 MP3 不会生效
+
+<IfModule mod_expires.c>
+    # 匹配文件的正则表达式，意味着此规则适用于该目录下的所有文件
+    # 注意：这个不能省略，否则协商不会生效
+    # ====================================
+    # 注意：调换以下顺序，对图片、字体的设置会无效
+    # ============================================
+    <FilesMatch "^.*$">
+        # 开启过期缓存功能
+        ExpiresActive On
+        # 缓存策略
+        ExpiresDefault "access plus 5 seconds"
+    </FilesMatch>
+    <FilesMatch "\.(jpg|png|bmp|ico|ttf|woff2)$">
+        # 开启过期缓存功能
+        ExpiresActive On
+        # 缓存策略
+        ExpiresDefault "access plus 3 hours"
+    </FilesMatch>
+</IfModule>
+
+
+
+
+
+
+# 5. 自定义 404 错误页面
+
+ErrorDocument 404 /index.html

@@ -1,0 +1,43 @@
+
+
+# 注释不要写在配置的同一行，会从服务器传输给浏览器
+
+
+
+# Cloudflare Pages 默认为所有文本类资源（HTML/CSS/JS）、字体、图片开启 Brotli（优先）+ Gzip 压缩，比 Apache 的 mod_deflate 效率更高，_headers 中无需额外操作
+
+# 多个路径对应 1 个设置，只有最后 1 个路径有效
+
+# /*.jpg                                                    无效
+# /*.png                                                    无效
+# /*.woff2                                                  有效
+#     Cache-Control: max-age=10800, must-revalidate
+
+
+
+# 匹配所有文件路径
+
+# 设置浏览器缓存时长。must-revalidate 在缓存过期后，必须回源服务器验证内容是否已被修改，服务器会告诉它是直接用缓存（返回 304 状态码）还是提供新版本（返回 200 和新数据）
+
+/*
+    Cache-Control: max-age=5, must-revalidate
+
+# 设置浏览器缓存时长为 3 小时（10800 秒）
+
+/*.jpg
+    Cache-Control: max-age=10800, must-revalidate
+
+/*.png
+    Cache-Control: max-age=10800, must-revalidate
+
+/*.bmp
+    Cache-Control: max-age=10800, must-revalidate
+
+/*.ico
+    Cache-Control: max-age=10800, must-revalidate
+
+/*.ttf
+    Cache-Control: max-age=10800, must-revalidate
+
+/*.woff2
+    Cache-Control: max-age=10800, must-revalidate
